@@ -129,7 +129,7 @@ var github_user_starred_resume = function(username, page) {
     }
 
     $.each(repos, function(i, repo) {
-        if (repo.full_name == "resume/resume.github.com") {
+        if (repo.full_name == "idealclover/resume") {
             star = true;
             return false; // stop iterating
         }
@@ -148,7 +148,7 @@ var github_user_starred_resume = function(username, page) {
 
 var run = function() {
     var itemCount = 0,
-        maxItems = 5,
+        maxItems = 10,
         maxLanguages = 9,
         starred = github_user_starred_resume(username);
 
@@ -218,7 +218,6 @@ var run = function() {
             avatar = data.avatar_url.match(/https:\/\/secure.gravatar.com\/avatar\/[0-9a-z]+/)[0];
             avatar += '?s=140&amp;d=https://github.com/images/gravatars/gravatar-140.png';
         }
-
         var view = {
             name: name,
             type: data.type,
@@ -227,7 +226,7 @@ var run = function() {
             earlyAdopter: 0,
             location: data.location,
             gravatar_id: data.gravatar_id,
-            avatar_url: avatar,
+            avatar_url: data.avatar_url,
             repos: data.public_repos,
             reposLabel: data.public_repos > 1 ? 'repositories' : 'repository',
             followers: data.followers,
@@ -460,15 +459,17 @@ var run = function() {
             repos = {};
 
         $.each(data, function(i, issue) {
-            if(repos[issue.repository_url] === undefined) {
-                repos[issue.repository_url] = { popularity: 1 }
-            } else {
-                repos[issue.repository_url].popularity += 1;
+            if(issue.author_association !== "OWNER") {
+                if(repos[issue.repository_url] === undefined) {
+                    repos[issue.repository_url] = { popularity: 1 }
+                } else {
+                    repos[issue.repository_url].popularity += 1;
+                }
             }
         });
-
+        console.log(repos)
         $.each(repos, function(repo, obj) {
-            sorted.push({ repo: repo, popularity: obj.popularity});
+                sorted.push({ repo: repo, popularity: obj.popularity});
         })
 
         function sortByPopularity(a, b) {
