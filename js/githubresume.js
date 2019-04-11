@@ -129,7 +129,7 @@ var github_user_starred_resume = function(username, page) {
     }
 
     $.each(repos, function(i, repo) {
-        if (repo.full_name == "idealclover/resume") {
+        if (repo.full_name == "idealclover/Resume") {
             star = true;
             return false; // stop iterating
         }
